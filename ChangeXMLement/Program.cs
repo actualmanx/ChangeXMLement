@@ -1,7 +1,4 @@
-﻿#nullable enable
-
-// See https://aka.ms/new-console-template for more information
-
+﻿using System.Diagnostics;
 using System.Xml;
 
 // Path to your XML file
@@ -29,3 +26,17 @@ else
 doc.Save(xmlFilePath);
 
 Console.WriteLine("Property changed successfully.");
+
+// Steam game ID
+string gameId = "2300320"; // Replace with your actual Steam game ID
+
+// Open the Steam game URL
+string steamUrl = "steam://run/" + gameId;
+Process.Start(new ProcessStartInfo
+{
+    FileName = steamUrl,
+    UseShellExecute = true
+});
+
+Console.WriteLine("Steam game URL opened successfully.");
+ 
