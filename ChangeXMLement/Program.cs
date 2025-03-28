@@ -1,8 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Xml;
+using System.IO;
 
-// Path to your XML file
-string xmlFilePath = "C:\\Users\\Kieran Hill\\OneDrive\\Documents\\My Games\\FarmingSimulator2025\\gameSettings.xml";
+// Get the path to the user's folder
+string userFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+// Combine the user's folder path with the relative path to the XML file
+string xmlFilePath = Path.Combine(userFolderPath, "OneDrive", "Documents", "My Games", "FarmingSimulator2025", "gameSettings.xml");
 
 // Load the XML document
 XmlDocument doc = new XmlDocument();
@@ -39,4 +43,3 @@ Process.Start(new ProcessStartInfo
 });
 
 Console.WriteLine("Steam game URL opened successfully.");
- 
