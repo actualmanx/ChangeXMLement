@@ -1,45 +1,86 @@
 ﻿using System.Diagnostics;
 using System.Xml;
-using System.IO;
 
-// Get the path to the user's folder
-string userFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
-// Combine the user's folder path with the relative path to the XML file
-string xmlFilePath = Path.Combine(userFolderPath, "OneDrive", "Documents", "My Games", "FarmingSimulator2025", "gameSettings.xml");
-
-// Load the XML document
-XmlDocument doc = new XmlDocument();
-doc.Load(xmlFilePath);
-
-// Find the <onlinePresenceName> element
-XmlNode? node = doc.SelectSingleNode("//onlinePresenceName");
-
-// Check if the node is found and change its value
-if (node != null)
+class Program
 {
-    node.InnerText = "Dilligaf"; // Change NEW_VALUE to the desired value
+    static void Main()
+    {
+        // Get the path to the user's Documents folder (OneDrive or local)
+        string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+        // Combine with the relative path to the XML file
+        string xmlFilePath = Path.Combine(documentsPath, "My Games", "FarmingSimulator2025", "gameSettings.xml");
+
+        // Check if the file exists
+        if (!File.Exists(xmlFilePath))
+        {
+            Console.WriteLine("gameSettings.xml not found at expected location.");
+            return;
+        }
+
+        // Load the XML document
+        XmlDocument doc = new XmlDocument();
+        try
+        {
+            doc.Load(xmlFilePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading XML file: {ex.Message}");
+            return;
+        }
+
+        // Find the <onlinePresenceName> element
+        XmlNode? node = doc.SelectSingleNode("//onlinePresenceName");
+
+        if (node != null)
+        {
+            string newValue = "Dilligaf";
+            if (node.InnerText != newValue)
+            {
+                node.InnerText = newValue;
+                Console.WriteLine("Value updated.");
+
+                try
+                {
+                    doc.Save(xmlFilePath);
+                    Console.WriteLine("Property changed successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error saving XML file: {ex.Message}");
+                    return;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Value already set. No update needed.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("<onlinePresenceName> element not found.");
+            return;
+        }
+
+        // Steam game ID
+        string gameId = "2300320"; // Farming Simulator 2025
+
+        // Open the Steam game URL
+        string steamUrl = "steam://run/" + gameId;
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = steamUrl,
+                UseShellExecute = true
+            });
+            Console.WriteLine("Steam game URL opened successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to launch Steam game: {ex.Message}");
+        }
+    }
 }
-else
-{
-    Console.WriteLine("<onlinePresenceName> element not found.");
-    return;
-}
 
-// Save the modified XML back to the file
-doc.Save(xmlFilePath);
-
-Console.WriteLine("Property changed successfully.");
-
-// Steam game ID
-string gameId = "2300320"; // Replace with your actual Steam game ID
-
-// Open the Steam game URL
-string steamUrl = "steam://run/" + gameId;
-Process.Start(new ProcessStartInfo
-{
-    FileName = steamUrl,
-    UseShellExecute = true
-});
-
-Console.WriteLine("Steam game URL opened successfully.");
