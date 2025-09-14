@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Xml;
-
-class Program
+﻿class Program
 {
     static void Main()
     {
@@ -81,6 +78,12 @@ class Program
         {
             Console.WriteLine($"Failed to launch Steam game: {ex.Message}");
         }
+        for (int i = 5; i > 0; i--)
+        {
+            Console.Write($"\rExiting in {i} second{(i == 1 ? "" : "s")}…");
+            Thread.Sleep(1000);
+        }
+        Console.WriteLine();
     }
 }
 
